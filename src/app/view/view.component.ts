@@ -19,7 +19,7 @@ export class ViewComponent implements OnInit, OnChanges {
   @Input() data = [];
   @ViewChild(CdkVirtualScrollViewport)
   viewport: CdkVirtualScrollViewport;
-  dataSource;
+  dataSource: TableVirtualScrollDataSource<never>;
   @Output()
   scrolled: EventEmitter<boolean> = new EventEmitter<boolean>(false);
   // }
@@ -36,23 +36,13 @@ export class ViewComponent implements OnInit, OnChanges {
 
   displayedColumns = ['id', 'name2', 'age'];
 
-  nextBatch(index) {
+  nextBatch(index: any) {
     const end = this.viewport.getRenderedRange().end;
     const total = this.viewport.getDataLength();
     console.log(`${end}, '>=', ${index + 10}`);
     if (index + 10 === 10.75) {
       console.log('scrolled');
       this.scrolled.emit(true);
-      this.data.concat(
-        Array.from({ length: 10 }, (v, i) => ({
-          id: i + 1,
-          name2: `Element #${i + 1}`,
-          age: 28,
-        }))
-      );
-      // this.dataSource = new TableVirtualScrollDataSource(this.data);
-
-      this.dataSource = new TableVirtualScrollDataSource(this.data);
     }
   }
 }
